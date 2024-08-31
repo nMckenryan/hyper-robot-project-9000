@@ -1,33 +1,65 @@
 "use client";
 import Head from "next/head";
 import { useState } from "react";
-import { FaAngleDoubleDown, FaAngleDoubleUp } from "react-icons/fa";
+import { FaAngleDoubleDown } from "react-icons/fa";
 import { FaArrowRotateLeft, FaArrowRotateRight } from "react-icons/fa6";
 import { GiRobotGolem } from "react-icons/gi";
 
 export default function Home() {
   const [currentRotation, setCurrentRotation] = useState(0);
+  const [robotPosition, setRobotPosition] = useState({ x: 0, y: 0 });
 
   function rotateRobot(degrees: number) {
-    setCurrentRotation((prevRotation) => prevRotation + degrees);
+    setCurrentRotation((prevRotation) => {
+      const newRotation = prevRotation + degrees;
+      if (newRotation == 360) {
+        return 0;
+      } else if (newRotation < 0) {
+        return 270;
+      }
+      return newRotation;
+    });
   }
 
-  function moveForward() {
-    const direction = currentRotation % 360;
-    const moveIcon =
-      direction < 180 ? (
-        <FaAngleDoubleUp className="absolute right-1 top-1 size-20" />
-      ) : (
-        <FaAngleDoubleUp className="absolute left-1 top-1 size-20 rotate-180" />
-      );
+  const moveRobot = () => {
+    let newCoordinates = { x: robotPosition.x, y: robotPosition.y };
+    switch (currentRotation) {
+      //north
+      case 0:
+        newCoordinates = { x: robotPosition.x, y: robotPosition.y + 1 };
+        break;
+      //west
+      case 90:
+        newCoordinates = { x: robotPosition.x - 1, y: robotPosition.y };
+        break;
+      //south
+      case 180:
+        newCoordinates = { x: robotPosition.x, y: robotPosition.y - 1 };
+        break;
+      //east
+      case 270:
+        newCoordinates = { x: robotPosition.x + 1, y: robotPosition.y };
+        break;
+    }
 
-    return <div className="relative">{moveIcon}</div>;
-  }
+    //makes sure robo doesn't go out of bounds
+    if (
+      newCoordinates.x > 4 ||
+      newCoordinates.x < 0 ||
+      newCoordinates.y > 4 ||
+      newCoordinates.y < 0
+    ) {
+      setRobotPosition(robotPosition);
+    } else {
+      setRobotPosition(newCoordinates);
+    }
+    console.log(robotPosition);
+  };
 
   const Robot = ({ rotation }: { rotation: number }) => {
     return (
       <div style={{ transform: `rotate(${rotation}deg)` }}>
-        <GiRobotGolem id="robot" className="size-40 fill-orange-400" />
+        <GiRobotGolem id="robot" className="h-20 w-20 fill-orange-400" />
       </div>
     );
   };
@@ -40,58 +72,67 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-[url('/background-texture-repeat.avif')]">
-        <h1 className="font-sans-serif text-3xl">Hyper Robot Project 9000</h1>
-        <div className="grid grid-cols-3 grid-rows-3 gap-3 bg-gray-300">
-          <div id="1:1" className="size-40 bg-gray-600">
-            <Robot rotation={currentRotation} />
-          </div>
-          <div id="1:2" className="size-40 bg-gray-600"></div>
-          <div id="1:3" className="size-40 bg-gray-600"></div>
-          <div id="2:1" className="size-40 bg-gray-600"></div>
-          <div id="2:2" className="size-40 bg-gray-600"></div>
-          <div id="2:3" className="size-40 bg-gray-600"></div>
-          <div id="3:1" className="size-40 bg-gray-600"></div>
-          <div id="3:2" className="size-40 bg-gray-600"></div>
-          <div id="3:3" className="size-40 bg-gray-600"></div>
-        </div>
+        <div id="app-window" className="bg-white p-10 shadow-lg">
+          <h1 className="font-sans-serif text-center text-3xl font-bold">
+            Hyper Robot Project 9000
+          </h1>
 
-        <div id="controls" className="mt-10 flex">
-          <button
-            type="button"
-            className="size-20 bg-gray-200 p-1"
-            id="left"
-            onClick={() => rotateRobot(90)}
+          <div
+            id="robot-grid-container"
+            className="flex items-center justify-center"
           >
-            <FaArrowRotateLeft className="mx-auto size-20" />
-          </button>
-          {/* 
-          --color-white: #ffffff;
-    --color-grey-100: #f7f7f7;
-    --color-grey-200: #efefef;
-    --color-grey-300: #dbdbdb;
-    --color-grey-400: #9b9b9b;
-    --color-grey-500: #666666;
-    --color-grey-600: #333333;
-    --color-pop-orange: #e15a1d; #EFEAE5*/}
-          <button
-            type="button"
-            id="move"
-            className="size-20 bg-gray-200"
-            onClick={moveForward}
-            style={{ transform: `rotate(${currentRotation}deg)` }}
-          >
-            <FaAngleDoubleDown className="mx-auto size-20 p-1" />
-          </button>
-          <button
-            type="button"
-            id="right"
-            className="size-20 bg-gray-200"
-            onClick={() => {
-              rotateRobot(-90);
-            }}
-          >
-            <FaArrowRotateRight className="mx-auto size-20 p-1" />
-          </button>
+            <div id="robot-grid" className="grid grid-cols-5 gap-2 p-3">
+              {Array.from({ length: 5 }, (_, y) =>
+                Array.from({ length: 5 }, (_, x) => (
+                  <div
+                    key={`${y}-${x}`}
+                    className={`flex h-20 w-20 justify-center border-2 border-gray-300 bg-gray-200 ${
+                      robotPosition.y === y && robotPosition.x === x
+                        ? "bg-blue-100"
+                        : ""
+                    }`}
+                  >
+                    {robotPosition.y === y && robotPosition.x === x && (
+                      <Robot rotation={currentRotation} />
+                    )}
+                  </div>
+                )),
+              )}
+            </div>
+          </div>
+
+          <div id="controls" className="mt-10 flex justify-center gap-2">
+            <button
+              type="button"
+              className="size-20 p-1"
+              id="left"
+              onClick={() => rotateRobot(90)}
+            >
+              <FaArrowRotateLeft className="mx-auto size-20 p-1" />
+            </button>
+
+            <button
+              type="button"
+              id="move"
+              className="size-20"
+              // onClick={() => setRobotPosition({ x: 1, y: 1 })}
+              onClick={moveRobot}
+              style={{ transform: `rotate(${currentRotation}deg)` }}
+            >
+              <FaAngleDoubleDown className="mx-auto size-20 p-1" />
+            </button>
+
+            <button
+              type="button"
+              id="right"
+              className="size-20"
+              onClick={() => {
+                rotateRobot(-90);
+              }}
+            >
+              <FaArrowRotateRight className="mx-auto size-20 p-1" />
+            </button>
+          </div>
         </div>
       </main>
     </>
