@@ -59,7 +59,7 @@ export default function Home() {
   const Robot = ({ rotation }: { rotation: number }) => {
     return (
       <div style={{ transform: `rotate(${rotation}deg)` }}>
-        <GiRobotGolem id="robot" className="fill-popOrange mx-auto h-14 w-14" />
+        <GiRobotGolem id="robot" className="mx-auto h-14 w-14 fill-popOrange" />
       </div>
     );
   };
@@ -72,9 +72,12 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-[url('/background-texture-repeat.avif')]">
-        <div id="app-window" className="rounded-lg bg-white p-2 shadow-lg">
+        <div
+          id="app-window"
+          className="rounded-lg border-2 bg-white p-2 shadow-lg"
+        >
           <div id="titles" className="flex flex-col justify-center">
-            <h1 className="font-sans-serif text-wetGranite text-center text-2xl font-bold">
+            <h1 className="font-sans-serif text-center text-2xl font-bold text-wetGranite">
               Hyper Robot Project 9000
             </h1>
 
@@ -93,7 +96,7 @@ export default function Home() {
                   <div
                     key={`${y}-${x}`}
                     className={
-                      "border-granite flex h-16 w-16 justify-center border-2"
+                      "flex h-16 w-16 justify-center border-2 border-granite"
                     }
                   >
                     {robotPosition.y === y && robotPosition.x === x && (
@@ -113,7 +116,7 @@ export default function Home() {
               onClick={() => rotateRobot(90)}
               title="Rotate Left"
             >
-              <FaArrowRotateLeft className="fill-wetGranite mx-auto size-14 p-1" />
+              <FaArrowRotateLeft className="mx-auto size-14 fill-wetGranite p-1" />
             </button>
 
             <button
@@ -124,7 +127,7 @@ export default function Home() {
               style={{ transform: `rotate(${currentRotation}deg)` }}
               title="Move Robot in direction it is facing"
             >
-              <FaAngleDoubleDown className="fill-wetGranite mx-auto size-14 p-1" />
+              <FaAngleDoubleDown className="mx-auto size-14 fill-wetGranite p-1" />
             </button>
 
             <button
@@ -136,7 +139,7 @@ export default function Home() {
               }}
               title="Rotate Right"
             >
-              <FaArrowRotateRight className="fill-wetGranite mx-auto size-14 p-1" />
+              <FaArrowRotateRight className="mx-auto size-14 fill-wetGranite p-1" />
             </button>
           </div>
         </div>

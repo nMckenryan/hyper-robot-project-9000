@@ -34,7 +34,8 @@ export default {
       },
       colors: {
         popOrange: "#e15a1d",
-        white: "#f7f7f7",
+        warmWhite: "#EFEAE5",
+
         whiteSteel: "#efefef",
         steel: "#dbdbdb",
         dryGranite: "#9b9b9b",
