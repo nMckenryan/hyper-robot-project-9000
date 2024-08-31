@@ -42,7 +42,7 @@ export default function Home() {
         break;
     }
 
-    //makes sure robo doesn't go out of bounds
+    //makes sure robot doesn't go out of bounds
     if (
       newCoordinates.x > 4 ||
       newCoordinates.x < 0 ||
@@ -59,7 +59,7 @@ export default function Home() {
   const Robot = ({ rotation }: { rotation: number }) => {
     return (
       <div style={{ transform: `rotate(${rotation}deg)` }}>
-        <GiRobotGolem id="robot" className="h-20 w-20 fill-orange-400" />
+        <GiRobotGolem id="robot" className="fill-popOrange mx-auto h-14 w-14" />
       </div>
     );
   };
@@ -72,10 +72,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-[url('/background-texture-repeat.avif')]">
-        <div id="app-window" className="bg-white p-10 shadow-lg">
-          <h1 className="font-sans-serif text-center text-3xl font-bold">
-            Hyper Robot Project 9000
-          </h1>
+        <div id="app-window" className="rounded-lg bg-white p-2 shadow-lg">
+          <div id="titles" className="flex flex-col justify-center">
+            <h1 className="font-sans-serif text-wetGranite text-center text-2xl font-bold">
+              Hyper Robot Project 9000
+            </h1>
+
+            <small className="text-center font-light">
+              By Nigel Mckenzie-Ryan
+            </small>
+          </div>
 
           <div
             id="robot-grid-container"
@@ -86,11 +92,9 @@ export default function Home() {
                 Array.from({ length: 5 }, (_, x) => (
                   <div
                     key={`${y}-${x}`}
-                    className={`flex h-20 w-20 justify-center border-2 border-gray-300 bg-gray-200 ${
-                      robotPosition.y === y && robotPosition.x === x
-                        ? "bg-blue-100"
-                        : ""
-                    }`}
+                    className={
+                      "border-granite flex h-16 w-16 justify-center border-2"
+                    }
                   >
                     {robotPosition.y === y && robotPosition.x === x && (
                       <Robot rotation={currentRotation} />
@@ -101,36 +105,38 @@ export default function Home() {
             </div>
           </div>
 
-          <div id="controls" className="mt-10 flex justify-center gap-2">
+          <div id="controls" className="flex justify-center gap-2">
             <button
               type="button"
-              className="size-20 p-1"
+              className="size-14"
               id="left"
               onClick={() => rotateRobot(90)}
+              title="Rotate Left"
             >
-              <FaArrowRotateLeft className="mx-auto size-20 p-1" />
+              <FaArrowRotateLeft className="fill-wetGranite mx-auto size-14 p-1" />
             </button>
 
             <button
               type="button"
               id="move"
-              className="size-20"
-              // onClick={() => setRobotPosition({ x: 1, y: 1 })}
+              className="size-14"
               onClick={moveRobot}
               style={{ transform: `rotate(${currentRotation}deg)` }}
+              title="Move Robot in direction it is facing"
             >
-              <FaAngleDoubleDown className="mx-auto size-20 p-1" />
+              <FaAngleDoubleDown className="fill-wetGranite mx-auto size-14 p-1" />
             </button>
 
             <button
               type="button"
               id="right"
-              className="size-20"
+              className="size-14"
               onClick={() => {
                 rotateRobot(-90);
               }}
+              title="Rotate Right"
             >
-              <FaArrowRotateRight className="mx-auto size-20 p-1" />
+              <FaArrowRotateRight className="fill-wetGranite mx-auto size-14 p-1" />
             </button>
           </div>
         </div>
